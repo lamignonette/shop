@@ -21,25 +21,25 @@ class User
             if($result->num_rows == 1){
                 $row = $result->fetch_assoc();
                 if(password_verify($password, $row["password"])){
-                    $loggedUser = new User($row["user_id"], $row["email"], $row['description']);
+                    $loggedUser = new User($row["user_id"], $row["email"], $row['surname']);
                     return $loggedUser;
                 }
             }
         }
         return false;
     }
-    static public function register( $newEmail, $password, $password2, $newDescription){
+    static public function register( $newEmail, $password, $password2, $newSurname){
         if($password != $password2){
             return false;
         }
         $hasshedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-        $sql = "INSERT INTO users(email,password,description)
-                VALUES('$newEmail', '$hasshedPassword', '$newDescription')";
+        $sql = "INSERT INTO users(email,password,surname)
+                VALUES('$newEmail', '$hasshedPassword', '$newSurname')";
 
         $result= self::$conn->query($sql);
         if($result == true){
-            $newUser = new User(self::$conn->insert_id, $newEmail, $newDescription);
+            $newUser = new User(self::$conn->insert_id, $newEmail, $newSurname);
             return $newUser;
         }
         return false;
