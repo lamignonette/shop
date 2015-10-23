@@ -10,7 +10,7 @@ class Przedmiot{
 
 
     public static function setConnection(mysqli $newConnection){
-        self::$conn = $newConnection;
+        self::$db = $newConnection;
     }
 
     public function __construct($newId,$newPrice,$newName,$newDescription){

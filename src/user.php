@@ -11,7 +11,7 @@ class User
     private $password;
 
     public static function setConnection(mysqli $newConnection){
-        self::$conn = $newConnection;
+        self::$db = $newConnection;
     }
     static public function logIn($email,$password){
         $sql = "SELECT * FROM users WHERE email= '$email'";
