@@ -1,6 +1,7 @@
 <?php
 require __DIR__. '/vendor/autoload.php';
 require __DIR__. '/config/db.php';
+require_once("src/admin.php");
 
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_DB, DB_PORT);
 if ($conn->connect_error) {
@@ -9,6 +10,13 @@ if ($conn->connect_error) {
     $conn->set_charset('utf8');
 }
 
+Admin::setConnection($conn);
+
+$router = new AltoRouter();
+$router->setBasePath('BASE_PATH');
+include('routing.php');
+
+$match = $router->match();
 ?>
 
 <!doctype html>
@@ -22,6 +30,13 @@ if ($conn->connect_error) {
 <body>
 <nav class="navbar navbar-default">
     <div class="container-fluid">
+
+        <?php
+        if($match){
+          require $match['target']; //klucz ktory zwraca, jest zawsze stały
+        }
+
+        ?>
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
