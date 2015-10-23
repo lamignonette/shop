@@ -9,6 +9,14 @@ if ($conn->connect_error) {
     $conn->set_charset('utf8');
 }
 
+
+
+
+$router = new AltoRouter();
+$router->setBasePath(BASE_PATH);
+include('routing.php');
+$match =$router->match();
+
 ?>
 
 <!doctype html>
@@ -20,38 +28,15 @@ if ($conn->connect_error) {
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 </head>
 <body>
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Sklep</a>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li><a href="#">Rejestracja</a></li>
-
-            </ul>
-            <form class="navbar-form navbar-left" role="search">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="email">
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="hasło">
-                </div>
-                <button type="submit" class="btn btn-default">Zaloguj</button>
-            </form>
-        </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-</nav>
+<?php
+include('body.php');
+if($match){
+    require $match['target'];
+}
+?>
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="src/script.js"></script>
 </body>
 </html>

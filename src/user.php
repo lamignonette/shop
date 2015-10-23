@@ -1,92 +1,109 @@
 <?php
 
+
 class User
 {
-    static private $conn;
-
-    private $id;
+    private static $conn;
+    private $user_id;
     private $name;
     private $surname;
-    private $mail;
-    private $password;
+    private $email;
+    private $address;
 
-    public static function setConnection(mysqli $newConnection){
+    public static function setConnection(mysqli $newConnection)
+    {
         self::$conn = $newConnection;
     }
-    static public function logIn($email,$password){
-        $sql = "SELECT * FROM users WHERE email= '$email'";
+    public static function login($email, $password)
+    {
+        $sql = "SELECT * FROM users WHERE email = '$email'";
         $result = self::$conn->query($sql);
-
-        if($result == true){
-            if($result->num_rows == 1){
+        if ($result == true) {
+            if ($result->num_rows == 1) {
                 $row = $result->fetch_assoc();
-                if(password_verify($password, $row["password"])){
-                    $loggedUser = new User($row["user_id"], $row["email"], $row['surname']);
+                if (password_verify($password, $row['password'])) {
+                    $loggedUser = new user($row["user_id"], $row["name"], $row["surname"], $row["email"],
+                        $row["userAdress"]);
                     return $loggedUser;
                 }
             }
         }
         return false;
     }
-    static public function register( $newEmail, $password, $password2, $newSurname){
-        if($password != $password2){
+    public static function register($newname, $newsurname, $newemail, $password, $password2, $newaddress)
+    {
+        if ($password != $password2) {
             return false;
         }
         $hasshedPassword = password_hash($password, PASSWORD_BCRYPT);
+        $sql = "INSERT INTO users(name, surname, email, password, address)
+            VALUES ('$newname','$newsurname','$newemail','$hasshedPassword',
+            '$newaddress')";
 
-        $sql = "INSERT INTO users(email,password,surname)
-                VALUES('$newEmail', '$hasshedPassword', '$newSurname')";
-
-        $result= self::$conn->query($sql);
-        if($result == true){
-            $newUser = new User(self::$conn->insert_id, $newEmail, $newSurname);
+        $result = self::$conn->query($sql);
+        if ($result == true) {
+            $newUser = new user(self::$conn->insert_id, $newname, $newsurname, $newemail, $newaddress);
             return $newUser;
         }
         return false;
     }
-
-    public function __construct($newId,$newName, $newEmail, $newSurname){
-        $this->id = $newId;
-        $this->name = $newName;
-        $this->email = $newEmail;
-        $this->surname = $newSurname;
+    public static function getuser($user_id = null)
+    {
+        $userTab = [];
+        $sql = "SELECT * FROM user" . ($user_id === null ? '' : 'WHERE itemId =' . $user_id);
+        $result = self::$conn->query($sql);
+        if ($result == true) {
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $shownUser = new user($row["user_id"], $row["name"], $row["surname"], $row["email"],
+                    $row["userAdress"]);
+                $userTab[] = $shownUser;
+            }
+        }
+        return $userTab;
     }
-
-    public function getName()
+    public function __construct($newuser_id, $newname, $newsurname, $newemail, $newaddress)
+    {
+        $this->user_id = $newuser_id;
+        $this->setname($newname);
+        $this->setsurname($newsurname);
+        $this->setemail($newemail);
+        $this->setaddress($newaddress);
+    }
+    public function getuser_id()
+    {
+        return $this->user_id;
+    }
+    public function getname()
     {
         return $this->name;
     }
-    public function setName($newName)
+    public function setname($name)
     {
-        $this->name = $newName;
+        $this->name = $name;
     }
-    public function getId()
-    {
-        return $this->id;
-    }
-    public function getSurname()
+    public function getsurname()
     {
         return $this->surname;
     }
-    public function setSurname($newSurname)
+    public function setsurname($surname)
     {
-        $this->surname = $newSurname;
+        $this->surname = $surname;
     }
-    public function getMail()
+    public function getemail()
     {
-        return $this->mail;
+        return $this->email;
     }
-    public function setMail($newMail)
+    public function setemail($email)
     {
-        $this->mail = $newMail;
+        $this->email = $email;
     }
-    public function getPassword()
+    public function getaddress()
     {
-        return $this->password;
+        return $this->address;
     }
-    public function setPassword($newPassword)
+    public function setaddress($address)
     {
-        $this->password = $newPassword;
+        $this->address = $address;
     }
-
 }

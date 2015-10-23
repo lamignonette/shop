@@ -1,3 +1,6 @@
+<?php
+include_once('register_if.php')
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,8 +16,9 @@
     <div class="row">
         <div class="col-sm-6 col-md-4 col-md-offset-4">
             <h1 class="text-center login-title">Please register</h1>
+
             <div class="account-wall">
-                <form class="form-signin" action="register.php" method="POST" >
+                <form class="form-signin" action="" method="POST">
                     <input type="text" class="form-control" name="name" placeholder="Name" required><Br>
                     <input type="text" class="form-control" name="surname" placeholder="Surname" required><br>
                     <input type="password" class="form-control" name="password1" placeholder="Password" required><br>
@@ -28,5 +32,7 @@
     </div>
 </div>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="src/script.js"></script>
 </body>
 </html>
